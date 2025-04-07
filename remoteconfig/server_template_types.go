@@ -24,7 +24,7 @@ type namedCondition struct {
 	// The logic of this condition.
 	// See the documentation on https://firebase.google.com/docs/remote-config/condition-reference
 	// for the expected syntax of this field.
-	Condition oneOfCondition `json:"condition,omitempty"`
+	Condition *oneOfCondition `json:"condition,omitempty"`
 }
 
 // Represents a condition that may be one of several types.
@@ -62,11 +62,11 @@ type percentCondition struct {
 
 	// The limit of percentiles to target in micro-percents when
 	// using the LESS_OR_EQUAL and GREATER_THAN operators. The value must
-	// be in the range [0 and 100000000].
+	// be in the range [0 and 100_000_000].
 	MicroPercent uint32 `json:"microPercent,omitempty"`
 
 	// The micro-percent interval to be used with the BETWEEN operator.
-	MicroPercentRange microPercentRange `json:"microPercentRange"`
+	MicroPercentRange microPercentRange `json:"microPercentRange,omitempty"`
 }
 
 // Represents the limit of percentiles to target in micro-percents.
@@ -83,13 +83,13 @@ type microPercentRange struct {
 
 // Structure representing a Remote Config parameter.
 // At minimum, a `defaultValue` or a `conditionalValues` entry must be present for the parameter to have any effect.
-type remoteConfigParameter struct {
+type parameter struct {
 	// The value to set the parameter to, when none of the named conditions evaluate to `true`.
-	DefaultValue remoteConfigParameterValue `json:"defaultValue,omitempty"`
+	DefaultValue parameterValue `json:"defaultValue,omitempty"`
 
 	// A `(condition name, value)` map. The condition name of the highest priority
 	// (the one listed first in the Remote Config template's conditions list) determines the value of this parameter.
-	ConditionalValues map[string]remoteConfigParameterValue `json:"conditionalValues,omitempty"`
+	ConditionalValues map[string]parameterValue `json:"conditionalValues,omitempty"`
 
 	// A description for this parameter. Should not be over 100 characters and may contain any Unicode characters.
 	Description string `json:"description,omitempty"`
@@ -101,7 +101,7 @@ type remoteConfigParameter struct {
 
 // Represents a Remote Config parameter value
 // that could be either an explicit parameter value or an in-app default value.
-type remoteConfigParameterValue struct {
+type parameterValue struct {
 	// The `string` value that the parameter is set to when it is an explicit parameter value
 	Value *string `json:"value,omitempty"`
 
@@ -151,4 +151,3 @@ type remoteConfigUser struct {
 	// Image URL. Output only.
 	ImageUrl string `json:"imageUrl,omitempty"`
 }
-
